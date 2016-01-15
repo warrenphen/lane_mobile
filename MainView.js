@@ -3,7 +3,6 @@
 var React = require("react-native");
  
 var {
-    Component,
     StyleSheet,
     Text,
     View,
@@ -15,11 +14,29 @@ var {
     TouchableOpacity,
 } = React;
  
-class MainView extends Component {
+class MainView extends React.Component {
  
     constructor(props) {
         super(props);
-        this.state = this.initialState();
+
+        var getSectionData = (dataBlob, sectionID) => {
+            return dataBlob[sectionID];
+        }
+
+        var getRowData = (dataBlob, sectionID, rowID) => {
+            return dataBlob[sectionID + ':' + rowID];
+        }
+
+        this.state = {
+            loaded : false,
+            dataSource : new ListView.DataSource({
+                getSectionData          : getSectionData,
+                getRowData              : getRowData,
+                rowHasChanged           : (row1, row2) => row1 !== row2,
+                sectionHeaderHasChanged : (s1, s2) => s1 !== s2
+            })
+        }
+
         this.bindMethods();
 
     }
@@ -31,26 +48,6 @@ class MainView extends Component {
 
         for (var methodName in this.bindableMethods) {
             this[methodName] = this.bindableMethods[methodName].bind(this);
-        }
-    }
-
-    initialState() {
-        var getSectionData = (dataBlob, sectionID) => {
-            return dataBlob[sectionID];
-        }
-
-        var getRowData = (dataBlob, sectionID, rowID) => {
-            return dataBlob[sectionID + ':' + rowID];
-        }
-
-        return {
-            loaded : false,
-            dataSource : new ListView.DataSource({
-                getSectionData          : getSectionData,
-                getRowData              : getRowData,
-                rowHasChanged           : (row1, row2) => row1 !== row2,
-                sectionHeaderHasChanged : (s1, s2) => s1 !== s2
-            })
         }
     }
 
@@ -82,6 +79,7 @@ class MainView extends Component {
             .then((responseData) => {
  
             var subscriptions = responseData.subscriptions,
+            length = subscriptions.length,
             dataBlob = {},
             sectionIDs = [],
             rowIDs = [],
@@ -92,7 +90,7 @@ class MainView extends Component {
             i,
             j;
             
-            for (i = 0; i < subscriptions.length; i++) {
+            for (i = 0; i < length; i++) {
             subscription = subscriptions[i];
 
             // Add Section to Section ID Array
@@ -102,13 +100,13 @@ class MainView extends Component {
 
             feeds = subscription.feed;
             feedLength = feeds.length;
-            
+            alert(subscription.name.en + subscription.feed.length);
             // Initialize Empty RowID Array for Section Index
             rowIDs[i] = [];
 
             for(j = 0; j < feedLength; j++) {
                 feed = feeds[j];
-                // feedDescription = feeds[j].description;
+
                 // Add Unique Row ID to RowID Array for Section
                 rowIDs[i].push(feed._id);
 
@@ -128,11 +126,15 @@ class MainView extends Component {
     }
 
   render () {
-    if (!this.state.loaded) {
-      return this.renderLoadingView();
+       if (!this.state.loaded) {
+            return this.renderLoadingView();
+        }
+
+        return this.renderListView();
     }
 
-  return (
+  renderListView() {
+      return (
             <View style={styles.container}>
                 <ListView
                     dataSource = {this.state.dataSource}
@@ -141,7 +143,7 @@ class MainView extends Component {
                     renderSectionHeader = {this.renderSectionHeader}
                 />
             </View>
-    );
+      );
   }
 
   renderSectionHeader(sectionData, sectionID) {

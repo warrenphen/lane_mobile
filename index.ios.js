@@ -12,8 +12,8 @@ var {
  
 var LoginView = require("./LoginView");
  
-var LaneProject = React.createClass({
-    render: function() {
+class LaneProject extends React.Component{
+    render() {
         return (
             <NavigatorIOS
                 style={styles.navigationContainer}
@@ -23,7 +23,7 @@ var LaneProject = React.createClass({
             }} />
         );
     }
-});
+}
  
 var styles = StyleSheet.create({
     navigationContainer: {
