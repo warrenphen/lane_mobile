@@ -20,6 +20,7 @@ class LaneProject extends React.Component{
                 initialRoute={{
                 title: "Lane",
                 component: LoginView,
+                translucent: 1,
             }} />
         );
     }
@@ -27,7 +28,7 @@ class LaneProject extends React.Component{
  
 var styles = StyleSheet.create({
     navigationContainer: {
-        flex: 1
+        flex: 1,
     }
 });
  

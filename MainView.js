@@ -100,7 +100,7 @@ class MainView extends React.Component {
 
             feeds = subscription.feed;
             feedLength = feeds.length;
-            alert(subscription.name.en + subscription.feed.length);
+            
             // Initialize Empty RowID Array for Section Index
             rowIDs[i] = [];
 
@@ -166,12 +166,14 @@ class MainView extends React.Component {
 
 } 
 
-
 Object.assign(MainView.prototype, {
     bindableMethods : {
         renderRow : function (rowData, sectionID, rowID) {
             return (
                 <TouchableOpacity onPress={() => this.onPressRow(rowData, sectionID)}>
+                    <View style={styles.imageContainer}>
+                      <Image source={require('./images/bg.png')} style={styles.feedImage}/>
+                    </View>
                     <View style={styles.rowStyle}>
                         <Text style={styles.rowTitle}>{rowData.name.en} </Text> 
                         <Text style={styles.rowText}>{rowData.description.en} </Text>        
@@ -199,6 +201,7 @@ var styles = StyleSheet.create({
     container: {
         flex: 1,
         marginTop: 65,
+        backgroundColor: "#f4f4f4"
     },
     activityIndicator: {
         alignItems: 'center',
@@ -225,11 +228,14 @@ var styles = StyleSheet.create({
     rowStyle: {
         paddingVertical: 20,
         paddingLeft: 16,
-        borderTopColor: 'white',
-        borderLeftColor: 'white',
-        borderRightColor: 'white',
-        borderBottomColor: '#E0E0E0',
-        borderWidth: 1
+        borderColor: '#E0E0E0',
+        backgroundColor: 'white',
+        borderBottomLeftRadius: 8,
+        borderBottomRightRadius: 8,
+        borderWidth: 1,
+        marginLeft: 10,
+        marginBottom: 10,
+        marginRight: 10,
     },
     rowTitle: {
         fontSize: 20
@@ -247,7 +253,25 @@ var styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'flex-start',
         padding: 6,
-        backgroundColor: '#2196F3'
+        marginBottom: 10,
+        backgroundColor: 'orange'
+    },
+    feedImage: {
+        borderColor: '#E0E0E0',
+        backgroundColor: 'white',
+        width: 355,
+        height: 200,
+    },
+      imageContainer: {
+        borderColor: '#E0E0E0',
+        backgroundColor: 'white',
+        borderTopLeftRadius: 8,
+        borderTopRightRadius: 8,
+        borderWidth: 1,
+        marginLeft: 10,
+        marginRight: 10,
+        width: 355,
+        height: 200,
     }
 });
  
